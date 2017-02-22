@@ -7,6 +7,8 @@ import { fromJS } from 'immutable';
 import { routerMiddleware, connectRouter } from 'connected-react-router/immutable';
 import createSagaMiddleware from 'redux-saga';
 import createHistory from 'history/createBrowserHistory';
+import { loadingBarMiddleware, showLoading, hideLoading } from 'react-redux-loading-bar';
+
 import createReducer from '../reducers';
 
 // Create redux store with history
@@ -22,6 +24,7 @@ const sagaMiddleware = createSagaMiddleware();
 // 1. sagaMiddleware: Makes redux-sagas work
 // 2. routerMiddleware: Syncs the location/URL path to the state
 const middlewares = [
+  loadingBarMiddleware(),
   sagaMiddleware,
   routerMiddleware(history),
 ];
@@ -64,3 +67,6 @@ if (module.hot) {
 
 export const getHistory = () => history;
 export const getStore = () => store;
+
+export const startLoading = () => getStore().dispatch(showLoading());
+export const endLoading = () => getStore().dispatch(hideLoading());
