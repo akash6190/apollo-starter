@@ -4,60 +4,38 @@
  *
  */
 
-import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
-{{#if wantHeaders}}
-import Helmet from 'react-helmet';
-{{/if}}
-{{#if wantMessages}}
-import { FormattedMessage } from 'react-intl';
-{{/if}}
-{{#if wantActionsAndReducer}}
-import { createStructuredSelector } from 'reselect';
-import makeSelect{{properCase name}} from './selectors';
-{{/if}}
-{{#if wantMessages}}
-import messages from './messages';
+
+import { createAsyncComponent } from 'react-async-component';
+
+{{#if wantActionsAndReducer }}
+import { getInjectors } from 'utils/asyncInjectors';
+const {
+  injectReducer,
+  {{#if wantSagas }}
+  injectSagas
+  {{/if}}
+} = getInjectors();
 {{/if}}
 
-export class {{ properCase name }} extends React.{{{ component }}} { // eslint-disable-line react/prefer-stateless-function
-  render() {
-    return (
-      <div>
-      {{#if wantHeaders}}
-        <Helmet
-          title="{{properCase name}}"
-          meta={{curly true}}[
-            {{curly true}} name: 'description', content: 'Description of {{properCase name}}' {{curly}},
-          ]{{curly}}
-        />
+export default createAsyncComponent({
+{{#if wantActionsAndReducer }}
+  resolve: () => new Promise((resolve) => {
+    Promise.all([
+      import('./reducer'),
+      {{#if wantSagas }}
+      import('./sagas'),
       {{/if}}
-      {{#if wantMessages}}
-        <FormattedMessage {...messages.header} />
+      import('./Component'),
+    ]).then(([reducer, sagas, Component]) => {
+      injectReducer('home', reducer.default);
+      {{#if wantSagas }}
+      injectSagas(sagas.default);
       {{/if}}
-      </div>
-    );
-  }
-}
-
-{{ properCase name }}.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-};
-
-{{#if wantActionsAndReducer}}
-const mapStateToProps = createStructuredSelector({
-  {{name}}: makeSelect{{properCase name}}(),
-});
-{{/if}}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
-}
-
-{{#if wantActionsAndReducer}}
-export default connect(mapStateToProps, mapDispatchToProps)({{ properCase name }});
+      resolve(Component);
+    });
+  }),
 {{else}}
-export default connect(null, mapDispatchToProps)({{ properCase name }});
+  resolve: () => import('./Component'),
 {{/if}}
+});
+

@@ -5,8 +5,10 @@ import isObject from 'lodash/isObject';
 import isString from 'lodash/isString';
 import invariant from 'invariant';
 import warning from 'warning';
+import { connectRouter } from 'connected-react-router/immutable';
 
 import createReducer from '../reducers';
+import { getStore, getHistory } from './store';
 
 /**
  * Validate the shape of redux store
@@ -41,7 +43,7 @@ export function injectAsyncReducer(store, isValid) {
     if (Reflect.has(store.asyncReducers, name)) return;
 
     store.asyncReducers[name] = asyncReducer; // eslint-disable-line no-param-reassign
-    store.replaceReducer(createReducer(store.asyncReducers));
+    store.replaceReducer(connectRouter(getHistory())(createReducer(store.asyncReducers)));
   };
 }
 
@@ -66,6 +68,10 @@ export function injectAsyncSagas(store, isValid) {
   };
 }
 
+
+export function getInjectors() {
+  return getAsyncInjectors(getStore());
+}
 /**
  * Helper for creating injectors
  */

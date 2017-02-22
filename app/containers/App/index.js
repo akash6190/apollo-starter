@@ -9,10 +9,16 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
+import { Switch, Route } from 'react-router';
+import { createStructuredSelector } from 'reselect';
+import { connect } from 'react-redux';
 
+import HomePage from 'containers/HomePage';
+import FeaturePage from 'containers/FeaturePage';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 import withProgressBar from 'components/ProgressBar';
+import { makeSelectLocation } from './selectors';
 
 const AppWrapper = styled.div`
   max-width: calc(768px + 16px * 2);
@@ -23,7 +29,7 @@ const AppWrapper = styled.div`
   flex-direction: column;
 `;
 
-export function App(props) {
+export function App() {
   return (
     <AppWrapper>
       <Helmet
@@ -34,14 +40,17 @@ export function App(props) {
         ]}
       />
       <Header />
-      {React.Children.toArray(props.children)}
+      <Switch>
+        <Route exact path={'/'} component={HomePage} />
+        <Route path="/features" component={FeaturePage} />
+      </Switch>
       <Footer />
     </AppWrapper>
   );
 }
 
-App.propTypes = {
-  children: React.PropTypes.node,
-};
+const mapStateToProps = createStructuredSelector({
+  location: makeSelectLocation(),
+});
 
-export default withProgressBar(App);
+export default connect(mapStateToProps)(withProgressBar(App));
