@@ -48,6 +48,11 @@ export const makeSelectLocation = () => createSelector(
   getRouter,
   (router) => router.get('location'),
 );
+
+export const makeSelectDrawer = () => createSelector(
+  selectGlobal,
+  (state) => state.get('drawer')
+);
 // export {
 //   selectGlobal,
 //   makeSelectCurrentUser,

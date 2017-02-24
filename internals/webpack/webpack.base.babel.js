@@ -24,8 +24,21 @@ module.exports = (options) => ({
       // they will be a part of our compilation either way.
       // So, no need for ExtractTextPlugin here.
       test: /\.css$/,
-      include: /node_modules/,
-      loaders: ['style-loader', 'css-loader'],
+      include: [/node_modules/, /app/],
+      use: [
+        'style-loader',
+        {
+          loader: 'css-loader',
+          options: {
+            modules: true,
+            sourceMap: true,
+            importLoaders: 2,
+            localIdentName: '[name]--[local]--[hash:base64:8]',
+            camelCase: true,
+          },
+        },
+        'postcss-loader' // eslint-disable-line comma-dangle
+      ],
     }, {
       test: /\.(eot|svg|otf|ttf|woff|woff2)$/,
       loader: 'file-loader',
@@ -79,6 +92,7 @@ module.exports = (options) => ({
   resolve: {
     modules: ['app', 'node_modules'],
     extensions: [
+      '.css',
       '.js',
       '.jsx',
       '.react.js',

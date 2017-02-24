@@ -14,9 +14,9 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { withAsyncComponents } from 'react-async-component';
 import { ConnectedRouter } from 'connected-react-router/immutable';
+import FontFaceObserver from 'fontfaceobserver';
 
 import { getStore, getHistory } from 'utils/store';
-import FontFaceObserver from 'fontfaceobserver';
 
 import 'sanitize.css/sanitize.css';
 
@@ -61,8 +61,13 @@ import './global-styles';
 // the index.html file and this observer)
 const openSansObserver = new FontFaceObserver('Open Sans', {});
 
+const iconsObserver = new FontFaceObserver('Material Icons', {});
+
 // When Open Sans is loaded, add a font-family using Open Sans to the body
-openSansObserver.load().then(() => {
+Promise.all([
+  openSansObserver.load(),
+  iconsObserver.load()
+]).then(() => {
   document.body.classList.add('fontLoaded');
 }, () => {
   document.body.classList.remove('fontLoaded');
