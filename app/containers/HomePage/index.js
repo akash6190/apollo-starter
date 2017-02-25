@@ -11,7 +11,7 @@ export default createAsyncComponent({
       import('./reducer'),
       // import('./sagas'),
       import('./Component'),
-    ]).then(([reducer, /*sagas,*/ Component]) => {
+    ]).then(([reducer, Component]) => {
       injectReducer('home', reducer.default);
       // injectSagas(sagas.default);
       endLoading();

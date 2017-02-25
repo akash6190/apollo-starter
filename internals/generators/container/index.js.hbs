@@ -4,38 +4,41 @@
  *
  */
 
-
 import { createAsyncComponent } from 'react-async-component';
+import { startLoading, endLoading } from 'utils/store';
 
-{{#if wantActionsAndReducer }}
 import { getInjectors } from 'utils/asyncInjectors';
+
 const {
+  {{#if wantActionsAndReducer }}
   injectReducer,
+  {{/if}}
   {{#if wantSagas }}
-  injectSagas
+  injectSagas,
   {{/if}}
 } = getInjectors();
-{{/if}}
 
 export default createAsyncComponent({
-{{#if wantActionsAndReducer }}
   resolve: () => new Promise((resolve) => {
+    startLoading();
     Promise.all([
+      {{#if wantActionsAndReducer }}
       import('./reducer'),
+      {{/if}}
       {{#if wantSagas }}
       import('./sagas'),
       {{/if}}
       import('./Component'),
-    ]).then(([reducer, sagas, Component]) => {
-      injectReducer('home', reducer.default);
+    ]).then(([{{#if wantActionsAndReducer }}reducer, {{/if}}{{#if wantSagas }}sagas, {{/if}}Component]) => {
+      {{#if wantActionsAndReducer }}
+      injectReducer('{{camelCase name }}', reducer.default);
+      {{/if}}
       {{#if wantSagas }}
       injectSagas(sagas.default);
       {{/if}}
+      endLoading();
       resolve(Component);
     });
   }),
-{{else}}
-  resolve: () => import('./Component'),
-{{/if}}
 });
 

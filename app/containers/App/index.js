@@ -57,9 +57,9 @@ const App = (props) => (
       onLeftIconClick={props.toggleDrawer}
       title="Apollo Starter"
     >
-      <Navigation type='horizontal'>
+      <Navigation type="horizontal">
         <NavLink to={'/features'} >Features</NavLink>
-        <Button icon='lock' label='Sign In' primary raised href={'/login'} />
+        <Button icon="lock" label="Sign In" primary raised href={'/login'} />
       </Navigation>
     </AppBar>
     <Panel>
@@ -69,7 +69,6 @@ const App = (props) => (
         <Switch>
           <Route exact path={'/'} component={HomePage} />
           <Route path="/features" component={FeaturePage} />
-          <Route path="/login" component={LoginPage} />
           <Route component={NotFoundPage} />
         </Switch>
       </section>

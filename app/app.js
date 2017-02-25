@@ -66,7 +66,7 @@ const iconsObserver = new FontFaceObserver('Material Icons', {});
 // When Open Sans is loaded, add a font-family using Open Sans to the body
 Promise.all([
   openSansObserver.load(),
-  iconsObserver.load()
+  iconsObserver.load(),
 ]).then(() => {
   document.body.classList.add('fontLoaded');
 }, () => {
