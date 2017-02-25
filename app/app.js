@@ -11,12 +11,12 @@ import 'babel-polyfill';
 // Import all the third party stuff
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import { ApolloProvider } from 'react-apollo';
 import { withAsyncComponents } from 'react-async-component';
 import { ConnectedRouter } from 'connected-react-router/immutable';
 import FontFaceObserver from 'fontfaceobserver';
 
-import { getStore, getHistory } from 'utils/store';
+import { getStore, getHistory, getClient } from 'utils/store';
 
 import 'sanitize.css/sanitize.css';
 
@@ -75,13 +75,13 @@ Promise.all([
 
 const render = (messages) => {
   withAsyncComponents(
-    <Provider store={getStore()}>
+    <ApolloProvider store={getStore()} client={getClient()}>
       <LanguageProvider messages={messages}>
         <ConnectedRouter history={getHistory()} >
           <App />
         </ConnectedRouter>
       </LanguageProvider>
-    </Provider>
+    </ApolloProvider>
   ).then(({ appWithAsyncComponents }) => {
     ReactDOM.render(appWithAsyncComponents, document.getElementById('app'));
   });

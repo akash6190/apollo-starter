@@ -10,6 +10,7 @@ import { loadingBarMiddleware, showLoading, hideLoading } from 'react-redux-load
 
 import createHistory from 'history/createBrowserHistory';
 import createReducer from '../reducers';
+export { getClient } from '../reducers';
 
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router
@@ -70,3 +71,4 @@ export const getStore = () => store;
 
 export const startLoading = () => getStore().dispatch(showLoading());
 export const endLoading = () => getStore().dispatch(hideLoading());
+
