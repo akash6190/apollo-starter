@@ -1,6 +1,11 @@
 {
   "parser": "babel-eslint",
   "extends": "airbnb",
+  "globals": {
+    "localStorage": true,
+    "document": true,
+    "fetch": true
+  },
   "env": {
     "browser": true,
     "node": true,

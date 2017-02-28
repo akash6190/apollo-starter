@@ -102,6 +102,9 @@ module.exports = (options) => ({
       'jsnext:main',
       'main',
     ],
+    alias: {
+      'redux-form$': 'redux-form/immutable',
+    },
   },
   devtool: options.devtool,
   target: 'web', // Make web variables accessible to webpack, e.g. window

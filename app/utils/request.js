@@ -1,4 +1,8 @@
 import 'whatwg-fetch';
+import { select, call, put } from 'redux-saga/effects';
+import { makeSelectToken } from 'containers/LoginPage/selectors';
+import { logout } from 'containers/LoginPage/actions';
+
 
 /**
  * Parses the JSON returned by a network request
@@ -12,23 +16,6 @@ function parseJSON(response) {
 }
 
 /**
- * Checks if a network request came back fine, and throws an error if not
- *
- * @param  {object} response   A response from a network request
- *
- * @return {object|undefined} Returns either the response, or throws an error
- */
-function checkStatus(response) {
-  if (response.status >= 200 && response.status < 300) {
-    return response;
-  }
-
-  const error = new Error(response.statusText);
-  error.response = response;
-  throw error;
-}
-
-/**
  * Requests a URL, returning a promise
  *
  * @param  {string} url       The URL we want to request
@@ -36,8 +23,40 @@ function checkStatus(response) {
  *
  * @return {object}           The response data
  */
-export default function request(url, options) {
-  return fetch(url, options)
-    .then(checkStatus)
-    .then(parseJSON);
+export default function* request(url, options) {
+  const token = yield select(makeSelectToken());
+
+  let headers = {};
+  if (token) {
+    headers = { Authorization: `JWT ${token}` };
+  }
+
+  let opts = {};
+  if (options && options.headers) {
+    opts = {
+      ...options,
+      headers: {
+        ...headers,
+        ...options.headers,
+      },
+    };
+  } else {
+    opts = options;
+  }
+
+  const response = yield call(fetch, url, opts);
+
+  if (response.status >= 200 && response.status < 300) {
+    return yield call(parseJSON, response);
+  }
+
+  if (response.status === 401) {
+    if (token) {
+      yield put(logout());
+    }
+  }
+
+  const error = new Error(response.statusText);
+  error.response = response;
+  throw error;
 }
