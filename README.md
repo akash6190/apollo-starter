@@ -4,7 +4,7 @@
     A starter kit for graphql, based on <a>graphql-express-server</a> and apollo-client.
   </strong>
   <p>
-    It is started from [react-boilerplate](react-boilerplate/boilerplate), so lots of things are very similar to that. (Currently this project is under development.)
+    It is started from <a href='https://github.com/react-boilerplate/react-boilerplate'>react-boilerplate</a>, so lots of things are very similar to that. (Currently this project is under development.)
   </p>
 </div>
 <div align="center"><strong>Start your next react project in seconds</strong></div>
