@@ -16,7 +16,8 @@ import { withAsyncComponents } from 'react-async-component';
 import { ConnectedRouter } from 'connected-react-router/immutable';
 import FontFaceObserver from 'fontfaceobserver';
 
-import { getStore, getHistory, getClient } from 'utils/store';
+import { getStore, getHistory } from 'utils/store';
+import { getClient } from 'utils/client';
 
 import 'sanitize.css/sanitize.css';
 

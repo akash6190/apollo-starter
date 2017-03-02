@@ -10,9 +10,13 @@ const resolve = require('path').resolve;
 const bodyParser = require('body-parser');
 const express = require('express');
 // const flash = require('connect-flash');
-const passport = require('passport');
+// const passport = require('passport');
+const counterService = require('./services/counter');
+const { createServer } = require('http');
+const { SubscriptionServer } = require('subscriptions-transport-ws');
 
-const schema = require('./data');
+const { configureSubscription } = require('./data/subscriptions');
+const schema = require('./data/schema');
 const logger = require('./logger');
 const setupFrontend = require('./middlewares/frontendMiddleware');
 const setupAuth = require('./middlewares/auth');
@@ -30,7 +34,8 @@ app.use(bodyParser.json());
 setupAuth(app);
 
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
-app.use('/graphql', passport.authenticate('jwt', { session: false }));
+// TODO:: uncomment this once jwt token is being sent with the requests
+// app.use('/graphql', passport.authenticate('jwt', { session: false }));
 
 app.use('/graphql', graphqlExpress((req) => {
   const query = req.query.query || req.body.query;
@@ -41,6 +46,7 @@ app.use('/graphql', graphqlExpress((req) => {
     schema,
     context: {
       user: req.user,
+      counterService,
     },
   };
 }));
@@ -63,8 +69,11 @@ const prettyHost = customHost || 'localhost';
 const port = argv.port || process.env.PORT || 3000;
 
 
+const server = createServer();
+
+server.on('request', app);
 // Start your app.
-app.listen(port, host, (err) => {
+server.listen(port, host, (err) => {
   if (err) {
     return logger.error(err.message);
   }
@@ -82,3 +91,8 @@ app.listen(port, host, (err) => {
     logger.appStarted(port, prettyHost);
   }
 });
+
+const subsServer = new SubscriptionServer( // eslint-disable-line no-unused-vars
+  { subscriptionManager: configureSubscription(schema) },
+  { server }
+);

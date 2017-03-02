@@ -1,5 +1,6 @@
 import { takeEvery, take, call, put, fork, cancel } from 'redux-saga/effects';
 import request from 'utils/request';
+import { getClient } from 'utils/client';
 import {
   FETCH_FLASH_MESSAGES,
   PERFORM_LOGIN,
@@ -12,6 +13,7 @@ import {
   loginSuccess,
   logout as performLogout,
 } from './actions';
+
 
 function* makeFetchRequest() {
   try {
@@ -53,6 +55,7 @@ function* fetchLoginToken() {
 function* logout() {
   return new Promise((resolve) => {
     localStorage.removeItem(TOKEN_NAME);
+    getClient().resetStore();
     resolve();
   });
 }
@@ -96,7 +99,7 @@ export function* loginWatcher() {
 
     if (action.type === PERFORM_LOGOUT) yield cancel(flow);
 
-    yield call(logout);
+    yield logout();
   }
 }
 

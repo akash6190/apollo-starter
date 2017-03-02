@@ -12,7 +12,6 @@ import createLogger from 'redux-logger';
 import loginSagas from 'containers/LoginPage/sagas';
 import createHistory from 'history/createBrowserHistory';
 import createReducer from '../reducers';
-export { getClient } from '../reducers';
 
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router
