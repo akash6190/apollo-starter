@@ -1,46 +1,21 @@
 /**
- *
- * Button.js
- *
- * A common button, if you pass it a prop "route" it'll render a link to a react-router route
- * otherwise it'll render a link with an onclick
+ * Connecting react-tolbox and Link
  */
 
-import React, { PropTypes, Children } from 'react';
+import React from 'react';
+import Button from 'react-toolbox/lib/button';
+import { Link } from 'react-router-dom';
 
-import A from './A';
-import StyledButton from './StyledButton';
-import Wrapper from './Wrapper';
+class LinkButton extends Link {
+  render() {
+    const { replace, to, ...props } = this.props; // eslint-disable-line no-unused-vars
 
-function Button(props) {
-  // Render an anchor tag
-  let button = (
-    <A href={props.href} onClick={props.onClick}>
-      {Children.toArray(props.children)}
-    </A>
-  );
-
-  // If the Button has a handleRoute prop, we want to render a button
-  if (props.handleRoute) {
-    button = (
-      <StyledButton onClick={props.handleRoute}>
-        {Children.toArray(props.children)}
-      </StyledButton>
+    const href = this.context.router.createHref(
+      typeof to === 'string' ? { pathname: to } : to
     );
-  }
 
-  return (
-    <Wrapper>
-      {button}
-    </Wrapper>
-  );
+    return <Button {...props} onClick={this.handleClick} href={href} />;
+  }
 }
 
-Button.propTypes = {
-  handleRoute: PropTypes.func,
-  href: PropTypes.string,
-  onClick: PropTypes.func,
-  children: PropTypes.node.isRequired,
-};
-
-export default Button;
+export default LinkButton;

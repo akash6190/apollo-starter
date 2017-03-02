@@ -53,7 +53,9 @@ export class LoginPage extends PureComponent {
 
   render() {
     if (this.props.token) {
-      return (<Redirect to="/" replace />);
+      const { location } = this.props; // eslint-disable-line react/prop-types
+      const to = (location && location.state && location.state.from) ? location.state.from : '/';
+      return (<Redirect to={to} replace />);
     }
     return (
       <LoginWrapper>

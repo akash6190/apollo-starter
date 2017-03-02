@@ -24,7 +24,10 @@ import FeaturePage from 'containers/FeaturePage';
 import LoginPage from 'containers/LoginPage';
 import NotFoundPage from 'containers/NotFoundPage';
 
+import Admin, { Drawer as AdminDrawer } from 'containers/Admin';
+
 import LoginButton from 'containers/LoginPage/LoginButton';
+import PrivateRoute from 'containers/LoginPage/PrivateRoute';
 import { fetchLoginToken } from 'containers/LoginPage/actions';
 
 // import Header from 'components/Header';
@@ -33,7 +36,6 @@ import NavLink from 'components/Link';
 
 import { toggleDrawer } from './actions';
 import { makeSelectDrawer } from './selectors';
-
 
 class App extends PureComponent {
   componentDidMount() {
@@ -58,11 +60,14 @@ class App extends PureComponent {
           </p>
           <Switch>
             <Route exact path={'/'} component={() => <p>Home Page</p>} />
+            <PrivateRoute path="/admin" component={AdminDrawer} />
             <Route component={() => <p>Default navbar</p>} />
           </Switch>
         </NavDrawer>
         <AppBar
           fixed
+          scrollHide
+          leftIcon={'menu'}
           rightIcon={'more'}
           onLeftIconClick={this.props.toggleDrawer}
           title="Apollo Starter"
@@ -74,12 +79,12 @@ class App extends PureComponent {
         </AppBar>
         <Panel>
           <section style={{ margin: '1.8rem' }}>
-            <Link to={'/'}>Home</Link>
-            <Link to={'/features'}>Features</Link>
+            <Link to="/admin">Admin</Link>
             <Switch>
               <Route exact path={'/'} component={HomePage} />
-              <Route path="/features" component={FeaturePage} />
               <Route path="/login" component={LoginPage} />
+              <Route path="/features" component={FeaturePage} />
+              <PrivateRoute path="/admin" component={Admin} />
               <Route component={NotFoundPage} />
             </Switch>
           </section>

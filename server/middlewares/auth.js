@@ -12,7 +12,7 @@ const tokenForUser = (user) =>
     uid: user._id, // eslint-disable-line no-underscore-dangle
     iat: Math.floor(Date.now() / 1000),
   }, process.env.SECRET, {
-    expiresIn: 60,
+    expiresIn: '1d',
     issuer: process.env.JWT_ISSUER,
     audience: process.env.JWT_AUDIENCE,
   });

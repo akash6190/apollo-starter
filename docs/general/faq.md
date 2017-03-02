@@ -254,4 +254,4 @@ You can find more information about the `performance` option (how to change maxi
 
 Submit an [issue](https://github.com/akash6190/apollo-starter/issues),
 hop onto the [Gitter channel](https://gitter.im/mxstbr/react-boilerplate)
-or contact Max direct on [twitter](https://twitter.com/mxstbr)!
+or contact Max direct on [twitter](https://facebook.com/akash6190)!
