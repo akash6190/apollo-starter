@@ -10,7 +10,7 @@ const resolve = require('path').resolve;
 const bodyParser = require('body-parser');
 const express = require('express');
 // const flash = require('connect-flash');
-// const passport = require('passport');
+const passport = require('passport');
 const counterService = require('./services/counter');
 const { createServer } = require('http');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
@@ -35,7 +35,7 @@ setupAuth(app);
 
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
 // TODO:: uncomment this once jwt token is being sent with the requests
-// app.use('/graphql', passport.authenticate('jwt', { session: false }));
+app.use('/graphql', passport.authenticate('jwt', { session: false }));
 
 app.use('/graphql', graphqlExpress((req) => {
   const query = req.query.query || req.body.query;
