@@ -8,7 +8,7 @@ const networkInterface = createBatchingNetworkInterface({
 });
 
 networkInterface.use([{
-  applyMiddleware(req, next) {
+  applyBatchMiddleware(req, next) {
     const headers = req.options.headers || {};
 
     // get the authentication token from local storage if it exists
@@ -19,6 +19,14 @@ networkInterface.use([{
     next();
   },
 }]);
+
+//  TODO:: add a error object for unauthorized access
+// networkInterface.useAfter([{
+//   applyBatchAfterware(res, next) {
+//     console.log(res);
+//     next();
+//   },
+// }]);
 
 const wsClient = new SubscriptionClient(`ws://${location.host}/`, {
   reconnect: true,
